@@ -13,14 +13,14 @@
 # Some Placeholders: [!] [*] [✓] [✗]
 
 # Default defconfig to use for builds.
-export CONFIG=neternels_defconfig
+export CONFIG=nethunter_defconfig
 
 # Default directory where kernel is located in.
 KDIR=$(pwd)
 export KDIR
 
 # Device name.
-export DEVICE="Samsung A70"
+export DEVICE="Samsung A70 4G"
 
 # Device codename.
 export CODENAME="a70q"
@@ -29,21 +29,15 @@ export CODENAME="a70q"
 export BUILDER="Robin"
 
 # Kernel repository URL.
-export REPO_URL="https://github.com/neternels/android_kernel_samsung_a70q"
+export REPO_URL="https://github.com/MrRob0-X/android_kernel_samsung_a70q"
 
 # Commit hash of HEAD.
 COMMIT_HASH=$(git rev-parse --short HEAD)
 export COMMIT_HASH
 
 # Telegram Information. Set 1 to enable. | Set 0 to disable.
- export TGI=1
-
-# Personal builds. Set 1 to enable. | Set 0 to disable.
-if [ "${PERSONAL}" = 1 ]; then
-    export CHATID=-1001522330051
-else
-    export CHATID=-1001301508914
-fi
+export TGI=1
+export CHATID=6010949455
 
 # Necessary variables to be exported.
 export ci
@@ -118,12 +112,12 @@ fi
 
 if [[ "${MODULE}" = 1 ]]; then
     if [ ! -d "${KDIR}"/modules ]; then
-        git clone --depth=1 https://github.com/neternels/neternels-Modules "${KDIR}"/modules
+        git clone --depth=1 https://github.com/MrRob0-X/nethunter-Modules "${KDIR}"/modules
     fi
 fi
 
 if [ ! -d "${KDIR}/anykernel3-a70q/" ]; then
-    git clone --depth=1 https://github.com/neternels/anykernel3 -b a70q anykernel3-a70q
+    git clone --depth=1 https://github.com/MrRob0-X/anykernel3 -b a70q anykernel3
 fi
 
 if [ "${ci}" != 1 ]; then
@@ -148,7 +142,7 @@ else
     export KBUILD_BUILD_USER=$BUILDER
     export VERSION=$version
     kver=$KBUILD_BUILD_VERSION
-    zipn=NetErnels-a70q-${VERSION}
+    zipn=Nethunter-a70q-${VERSION}
     if [[ "${MODULE}" = "1" ]]; then
         modn="${zipn}-modules"
     fi
@@ -271,8 +265,8 @@ mkzip() {
         tg "*Building zip!*"
     fi
     echo -e "\n\e[1;93m[*] Building zip! \e[0m"
-    mv "${KDIR}"/out/arch/arm64/boot/Image.gz-dtb "${KDIR}"/anykernel3-a70q
-    cd "${KDIR}"/anykernel3-a70q || exit 1
+    mv "${KDIR}"/out/arch/arm64/boot/Image.gz-dtb "${KDIR}"/anykernel3
+    cd "${KDIR}"/anykernel3 || exit 1
     zip -r9 "$zipn".zip . -x ".git*" -x "README.md" -x "LICENSE" -x "*.zip"
     echo -e "\n\e[1;32m[✓] Built zip! \e[0m"
     if [[ "${TGI}" != "0" ]]; then
@@ -294,14 +288,14 @@ obj() {
 
 # A function to uprev localversion in defconfig.
 upr() {
-    echo -e "\n\e[1;93m[*] Bumping localversion to -NetErnels-${1}! \e[0m"
-    "${KDIR}"/scripts/config --file "${KDIR}"/arch/arm64/configs/$CONFIG --set-str CONFIG_LOCALVERSION "-NetErnels-${1}"
+    echo -e "\n\e[1;93m[*] Bumping localversion to -MrRobin_Ho_Od-${1}! \e[0m"
+    "${KDIR}"/scripts/config --file "${KDIR}"/arch/arm64/configs/$CONFIG --set-str CONFIG_LOCALVERSION "-MrRobin_Ho_Od-${1}"
     rgn
     if [ "${ci}" != 1 ]; then
         git add arch/arm64/configs/$CONFIG
-        git commit -S -s -m "neternels_defconfig: Bump to \`${1}\`"
+        git commit -S -s -m "nethunter_defconfig: Bump to \`${1}\`"
     fi
-    echo -e "\n\e[1;32m[✓] Bumped localversion to -NetErnels-${1}! \e[0m"
+    echo -e "\n\e[1;32m[✓] Bumped localversion to -MrRobin_Ho_Od-${1}! \e[0m"
 }
 
 # A function to showcase the options provided for args-based usage.
